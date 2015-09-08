@@ -1,0 +1,100 @@
+<extend name="Public/base"/>
+<block name="header">
+	<ul class="nav navbar-nav">
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">商品 <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="{:U('Index/index')}">全部类别</a></li>
+				<li><a href="{:U('Index/index?label=电器数码')}">电器数码</a></li>
+				<li><a href="{:U('Index/index?label=运动健身')}">运动健身</a></li>
+				<li><a href="{:U('Index/index?label=图书教材')}">图书教材</a></li>
+				<li><a href="{:U('Index/index?label=生活娱乐')}">生活娱乐</a></li>
+				<li><a href="{:U('Index/index?label=衣物伞帽')}">衣物伞帽</a></li>
+				<li><a href="{:U('Index/index?label=其他类别')}">其他类别</a></li>
+			</ul>
+		</li>
+		<li><a href="{:U('User/publish')}">发布 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+		<li class="dropdown active">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">我的发布 <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="{:U('User/published')}">全部状态</a></li>
+				<li><a href="{:U('User/published?status=0')}">竞价中</a></li>
+				<li><a href="{:U('User/published?status=1')}">已成交</a></li>
+				<li><a href="{:U('User/published?status=-1')}">已下架</a></li>
+			</ul>
+		</li>
+		<li><a href="{:U('User/auctioned')}">我的竞价</a></li>
+	</ul>
+	<form action="{:U('Index/search')}" class="navbar-form navbar-left" role="search">
+		<div class="form-group">
+			<input type="search" name="key" class="form-control" placeholder="搜索商品" required required>
+		</div>
+		<button type="submit" class="btn btn-default">搜索</button>
+	</form>
+	<ul class="nav navbar-nav navbar-right">
+		<li class="notlogin"><a href="{:U('Login/index')}">登录</a></li>
+		<li class="notlogin"><a href="{:U('Login/signup')}">注册</a></li>
+		<li class="dropdown login">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" >{:session('uname')} <b class="caret"></b></a>
+			<ul class="dropdown-menu">							
+				<li><a href="{:U('User/setting')}">账号设置</a></li>
+				<li><a href="{:U('User/logout')}">退出</a></li>
+			</ul>
+		</li>
+	</ul>
+</block>
+<block name="content">
+	<div class="row">
+	<empty name="data">
+		<div class="alert alert-success">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<strong>orz木有数据orz</strong>
+		</div>
+	</empty>
+	<volist name="data" id="vo">
+		<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" id="{$vo.gid}">
+			<div class="thumbnail">
+				<img data-src="#" alt="" src="{$vo.thumb_url}" class="img-responsive">
+				<div class="caption my-text">
+					<b><span>{$vo.gname}</span></b>
+					<hr>
+					<div class="row">
+						<div class="col-md-12 col-xs-12">底价：<strong>￥{$vo.base_price}</strong></div>
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-md-12 col-xs-12">最高竞价：<strong>￥{$vo.top_auction}</strong></div>
+					</div>
+
+					<!-- <hr> -->
+					<br>
+					<div class="row">
+						<div class="col-md-6 col-xs-6"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <span>评论数：{$vo.comment_num}</span></div>
+						<div class="col-md-6 col-xs-6"><span>竞价数：</span><span>{$vo.auction_num}</span></div>
+					</div>	
+					<!-- <hr> -->
+					<br>
+					<div class="row">
+						<div class="col-md-6 col-xs-6">
+							<span>状态：</span><strong><switch name="vo.status"><case value="0">竞价中</case><case value="1">已成交</case><case value="-1">已下架</case></switch></strong>
+						</div>
+						<div class="col-md-6 col-xs-6">
+							{$vo.update_time|substr=0,10}
+						</div>
+						<hr>
+						<div class="col-md-12 col-xs-12">
+							<a href="<?php echo U('Index/detail').'?gid='.$vo['gid'];?>" class="btn btn-primary btn-sm">查看详情</a>
+							<switch name="vo.status"><case value="0"><a href="<?php echo U('User/delete').'?gid='.$vo['gid'];?>" type="button" class="btn btn-danger btn-sm">下架</a></case></switch> 							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</volist>
+	</div>
+	<div class="row">
+		<div class="col-md-7 col-md-offset-5 col-xs-12" id="page">
+				{$page}
+		</div>
+	</div>	
+</block>

@@ -1,0 +1,207 @@
+<?php if (!defined('THINK_PATH')) exit();?><!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>二手交易系统</title>
+	<!-- 新 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="/secondhand/Public/css/bootstrap.min.css">
+
+	<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+	<!-- <link rel="stylesheet" href="css/bootstrap-theme.min.css"> -->
+
+	<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+	<script src="/secondhand/Public/js/jquery.min.js"></script>
+
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="/secondhand/Public/js/bootstrap.min.js"></script>
+	<style>
+		body { padding-top: 70px; }
+		.my-text{
+			white-space:nowrap;
+			overflow:hidden;
+			text-overflow:ellipsis;
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="<?php echo U('Index/index');?>">二手交易市场</a>
+			</div>
+		
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				
+	<ul class="nav navbar-nav">
+		<li class="dropdown active">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">商品 <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="<?php echo U('Index/index');?>">全部类别</a></li>
+				<li><a href="<?php echo U('Index/index?label=电器数码');?>">电器数码</a></li>
+				<li><a href="<?php echo U('Index/index?label=运动健身');?>">运动健身</a></li>
+				<li><a href="<?php echo U('Index/index?label=图书教材');?>">图书教材</a></li>
+				<li><a href="<?php echo U('Index/index?label=生活娱乐');?>">生活娱乐</a></li>
+				<li><a href="<?php echo U('Index/index?label=衣物伞帽');?>">衣物伞帽</a></li>
+				<li><a href="<?php echo U('Index/index?label=其他类别');?>">其他类别</a></li>
+			</ul>
+		</li>
+		<li><a href="<?php echo U('User/publish');?>">发布 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">我的发布 <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="<?php echo U('User/published');?>">全部状态</a></li>
+				<li><a href="<?php echo U('User/published?status=0');?>">竞价中</a></li>
+				<li><a href="<?php echo U('User/published?status=1');?>">已成交</a></li>
+				<li><a href="<?php echo U('User/published?status=-1');?>">已下架</a></li>
+			</ul>
+		</li>
+		<li><a href="<?php echo U('User/auctioned');?>">我的竞价</a></li>
+	</ul>
+	<form action="<?php echo U('Index/search');?>" class="navbar-form navbar-left" role="search">
+		<div class="form-group">
+			<input type="search" name="key" class="form-control" placeholder="搜索商品" required required>
+		</div>
+		<button type="submit" class="btn btn-default">搜索</button>
+	</form>
+	<ul class="nav navbar-nav navbar-right">
+		<li class="notlogin"><a href="<?php echo U('Login/index');?>">登录</a></li>
+		<li class="notlogin"><a href="<?php echo U('Login/signup');?>">注册</a></li>
+		<li class="dropdown login">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" ><?php echo session('uname');?> <b class="caret"></b></a>
+			<ul class="dropdown-menu">							
+				<li><a href="<?php echo U('User/setting');?>">账号设置</a></li>
+				<li><a href="<?php echo U('User/logout');?>">退出</a></li>
+			</ul>
+		</li>
+	</ul>
+
+			</div><!-- /.navbar-collapse -->
+		</div>
+	</nav>
+	<div class="container">
+		
+	<div class="row" id="sort">
+	    <div class="col-xs-4 col-sm-2 col-md-1 col-lg-1">
+			<a href="#" type="button" class="btn btn-default" data-key="base_price" data-sort="SORT_DESC">底价<span class="glyphicon glyphicon-arrow-down"></span></a>
+		</div>
+		<div class="col-xs-4 col-sm-2 col-md-1 col-lg-1">
+			<a href="#" type="button" class="btn btn-default" data-key="comment_num" data-sort="SORT_DESC">评论数 <span class="glyphicon glyphicon-arrow-down"></span></a>
+		</div>
+		<div class="col-xs-4 col-sm-2 col-md-1 col-lg-1">
+			<a href="#" type="button" class="btn btn-default" data-key="auction_num" data-sort="SORT_DESC">竞价数<span class="glyphicon glyphicon-arrow-down"></span></a>
+		</div>
+		<div class="col-xs-4 col-sm-2 col-md-2 col-lg-1">
+			<a href="#" type="button" class="btn btn-default" data-key="top_auction" data-sort="SORT_DESC">竞价金额<span class="glyphicon glyphicon-arrow-down"></span></a>
+		</div>
+		<div class="col-xs-4 col-sm-2 col-md-2 col-lg-1">
+			<a href="#" type="button" class="btn btn-default" data-key="update_time" data-sort="SORT_DESC">发布时间<span class="glyphicon glyphicon-arrow-down"></span></a>			
+		</div>
+	</div>
+	<hr>
+	<div class="row" id="fill">
+		<?php if(empty($data)): ?><div class="alert alert-success">
+			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+			<strong>orz木有数据orz</strong>
+		</div><?php endif; ?>
+	<?php if(is_array($data)): $i = 0; $__LIST__ = $data;if( count($__LIST__)==0 ) : echo "" ;else: foreach($__LIST__ as $key=>$vo): $mod = ($i % 2 );++$i;?><div class="col-xs-12 col-sm-6 col-md-3 col-lg-3" id="<?php echo ($vo["gid"]); ?>">
+			<div class="thumbnail">
+				<img data-src="#" alt="" src="<?php echo ($vo["thumb_url"]); ?>" class="img-responsive">
+				<div class="caption my-text">
+					<b><span><?php echo ($vo["gname"]); ?></span></b>
+					<hr>
+					<div class="row">
+						<div class="col-md-12 col-xs-12">底价：<strong>￥<?php echo ($vo["base_price"]); ?></strong></div>
+					</div>
+					<br>
+					<div class="row">
+						<div class="col-md-12 col-xs-12">最高竞价：<strong>￥<?php echo ($vo["top_auction"]); ?></strong></div>
+					</div>
+					<!-- <hr> -->
+					<br>
+					<div class="row">
+						<div class="col-md-6 col-xs-6"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <span>评论数：<?php echo ($vo["comment_num"]); ?></span></div>
+						<div class="col-md-6 col-xs-6"><span>竞价数：</span><span><?php echo ($vo["auction_num"]); ?></span></div>
+					</div>	
+					<!-- <hr> -->
+					<br>
+					<div class="row">
+						<div class="col-md-12 col-xs-12">
+							发布时间：<?php echo (substr($vo["update_time"],0,16)); ?>
+						</div>
+					</div>
+						<hr>
+					<div class="row">
+						<div class="col-md-12 col-xs-12">
+							<a href="<?php echo U('Index/detail').'?gid='.$vo['gid'];?>" class="btn btn-primary btn-sm">查看详情</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><?php endforeach; endif; else: echo "" ;endif; ?>
+	</div>
+	<div class="row">
+		<div class="col-md-7 col-md-offset-5 col-xs-12" id="page">
+				<?php echo ($page); ?>
+		</div>
+	</div>
+
+	</div>
+
+	<!-- Footer
+	================================================== -->
+	<footer class="footer navbar-fixed-bottom">
+	    <div class="container">
+	        <div>
+	        	
+	        </div>
+	    </div>
+	</footer>
+	<script>
+	    var islogin;
+		$(document).ready(function() {
+			islogin =<?php echo "'".session('uid')."'";?>;
+			if(islogin=='')
+				$(".login").css('display', 'none');
+			else
+				$(".notlogin").css('display', 'none');
+		});
+	</script>
+	
+<script type="text/javascript">
+	$("#sort a").click(function() {		
+		/* Act on the event */
+		var that = this;
+		if($(this).data("sort")=="SORT_DESC"){
+			$(this).data("sort","SORT_ASC");
+			$(this).children('span').eq(0).attr("class","glyphicon glyphicon-arrow-up");
+		}else{
+			$(this).data("sort","SORT_DESC");
+			$(this).children('span').eq(0).attr("class","glyphicon glyphicon-arrow-down");
+		}
+		$.post('<?php echo U("Index/sort");?>', 
+			{"key":$(that).data('key'),"sort":$(that).data("sort")}, 
+			function(data, textStatus, xhr) {
+			/*optional stuff to do after success */
+				console.log(data);
+				var content = "";
+				for (var i = 0; i < data.length; i++) {
+					var vo = data[i];
+					content += '<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3"><div class="thumbnail"><img data-src="#" alt="" src="'+vo.thumb_url+'"class="img-responsive"><div class="caption my-text"><b><span>'+vo.gname+'</span></b><hr><div class="row"><div class="col-md-12 col-xs-12">底价：<strong>￥'+vo.base_price+'</strong></div></div><br><div class="row"><div class="col-md-12 col-xs-12">最高竞价：<strong>￥'+vo.top_auction+'</strong></div></div><br><div class="row"><div class="col-md-6 col-xs-6"><span class="glyphicon glyphicon-comment" aria-hidden="true"></span> <span>评论数：'+vo.comment_num+'</span></div><div class="col-md-6 col-xs-6"><span>竞价数：</span><span>'+vo.auction_num+'</span></div></div><br><div class="row"><div class="col-md-12 col-xs-12">  发布时间：'+vo.update_time+'</div></div><hr><div class="row"><div class="col-md-12 col-xs-12"><a href="'+<?php echo "'".U('Index/detail').'?gid='."'";?>+vo.gid+'" class="btn btn-primary btn-sm">查看详情</a></div></div></div></div></div>'; 
+				};
+				$("#fill").html(content);
+				$("#page").css("display","none");
+			});			
+     });
+</script>
+
+</body>
+</html>

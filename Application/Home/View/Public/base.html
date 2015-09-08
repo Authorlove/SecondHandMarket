@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>二手交易系统</title>
+	<!-- 新 Bootstrap 核心 CSS 文件 -->
+	<link rel="stylesheet" href="__PUBLIC__/css/bootstrap.min.css">
+
+	<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+	<!-- <link rel="stylesheet" href="css/bootstrap-theme.min.css"> -->
+
+	<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+	<script src="__PUBLIC__/js/jquery.min.js"></script>
+
+	<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+	<script src="__PUBLIC__/js/bootstrap.min.js"></script>
+	<style>
+		body { padding-top: 70px; }
+		.my-text{
+			white-space:nowrap;
+			overflow:hidden;
+			text-overflow:ellipsis;
+		}
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="{:U('Index/index')}">二手交易市场</a>
+			</div>
+		
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse navbar-ex1-collapse">
+				<block name="header">
+					
+				</block>
+			</div><!-- /.navbar-collapse -->
+		</div>
+	</nav>
+	<div class="container">
+		<block name="content"></block>
+	</div>
+
+	<!-- Footer
+	================================================== -->
+	<footer class="footer navbar-fixed-bottom">
+	    <div class="container">
+	        <div>
+	        	<block name="footer"></block>
+	        </div>
+	    </div>
+	</footer>
+	<script>
+	    var islogin;
+		$(document).ready(function() {
+			islogin =<?php echo "'".session('uid')."'";?>;
+			if(islogin=='')
+				$(".login").css('display', 'none');
+			else
+				$(".notlogin").css('display', 'none');
+		});
+	</script>
+	<block name="script"></block>
+</body>
+</html>

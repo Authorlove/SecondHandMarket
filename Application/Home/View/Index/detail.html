@@ -1,0 +1,301 @@
+<extend name="Public/base"/>
+<block name="header">
+	<ul class="nav navbar-nav">
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">商品 <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="{:U('Index/index')}">全部类别</a></li>
+				<li><a href="{:U('Index/index?label=电器数码')}">电器数码</a></li>
+				<li><a href="{:U('Index/index?label=运动健身')}">运动健身</a></li>
+				<li><a href="{:U('Index/index?label=图书教材')}">图书教材</a></li>
+				<li><a href="{:U('Index/index?label=生活娱乐')}">生活娱乐</a></li>
+				<li><a href="{:U('Index/index?label=衣物伞帽')}">衣物伞帽</a></li>
+				<li><a href="{:U('Index/index?label=其他类别')}">其他类别</a></li>
+			</ul>
+		</li>
+		<li><a href="{:U('User/publish')}">发布 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">我的发布 <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="{:U('User/published')}">全部状态</a></li>
+				<li><a href="{:U('User/published?status=0')}">竞价中</a></li>
+				<li><a href="{:U('User/published?status=1')}">已成交</a></li>
+				<li><a href="{:U('User/published?status=-1')}">已下架</a></li>
+			</ul>
+		</li>
+		<li><a href="{:U('User/auctioned')}">我的竞价</a></li>
+	</ul>
+	<form action="{:U('Index/search')}" class="navbar-form navbar-left" role="search">
+		<div class="form-group">
+			<input type="search" name="key" class="form-control" placeholder="搜索商品" required required>
+		</div>
+		<button type="submit" class="btn btn-default">搜索</button>
+	</form>
+	<ul class="nav navbar-nav navbar-right">
+		<li class="notlogin"><a href="{:U('Login/index')}">登录</a></li>
+		<li class="notlogin"><a href="{:U('Login/signup')}">注册</a></li>
+		<li class="dropdown login">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" >{:session('uname')} <b class="caret"></b></a>
+			<ul class="dropdown-menu">							
+				<li><a href="{:U('User/setting')}">账号设置</a></li>
+				<li><a href="{:U('User/logout')}">退出</a></li>
+			</ul>
+		</li>
+	</ul>
+</block>
+<block name="content">
+	<div class="row">
+		<div class="col-md-3">
+			<img src="{$gpic}" alt="" class="img-responsive img-rounded">
+		</div>
+		<div class="col-md-9">
+			<div class="row">
+			<div class="col-md-12">
+				<h3><span>{$gname}</span>  <small>{$description}</small></h3>
+			</div>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col-md-4 col-xs-4">
+					<span>标签: <span class="label label-default">{$label}</span></span> 
+				</div>	
+
+				<div class="col-md-4 col-xs-4">
+					<span>发布者: <span id="{$user_id}">{$uname}</span></span> 
+				</div>
+				<div class="col-md-4 col-xs-4">
+					<span>发布时间: <span>{$update_time}</span></span> 
+				</div>		
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-4 col-xs-4">底价：<span>￥<b id="base_price">{$base_price}</b></span></div>
+				<div class="col-md-4 col-xs-4">最高竞价：<span>￥<b id="top_auction">{$top_auction}</b></span></div>
+				<div class="col-md-4 col-xs-4">
+					<span>状态：</span><strong><switch name="status"><case value="0">竞价中</case><case value="1">已成交</case><case value="-1">已下架</case></switch></strong>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-4 col-xs-4"><span>评论数：</span> <span>{$comment_num}</span></div>
+				<div class="col-md-4 col-xs-4"><span>竞价数：</span><span>{$auction_num}</span></div>
+				<div class="col-md-4 col-xs-offset-6 col-xs-6">
+				    <neq name="isMyGoods" value="1">
+						<button type="button" class="btn btn-primary btn-sm modal-btn" data-toggle="modal" data-target="#commentModal">发表评论</button>
+						<button type="button" class="btn btn-primary btn-sm modal-btn" data-toggle="modal" data-target="#auctionModal">参与竞价</button>
+					</neq>
+				    <if condition="($isMyGoods eq 1) AND ($status eq 0) AND ($top_auction neq '无')"><a type="button" class="btn btn-danger btn-sm" href="<?php echo U('User/makeDeal').'?gid='.$gid;?>">成交</a>
+					</if>
+				</div>
+			</div>	
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div role="tabpanel">
+		    <!-- Nav pills -->
+		    <ul class="nav nav-tabs" role="tablist">
+		        <li role="presentation" class="active col-md-offset-5">
+		            <a href="#comment" aria-controls="comment" role="tab" data-toggle="tab">评论</a>
+		        </li>
+		        <li role="presentation">
+		            <a href="#auction" aria-controls="auction" role="tab" data-toggle="tab">竞价</a>
+		        </li>
+		    </ul>
+			<br>
+		    <!-- Tab panes -->
+		    <div class="tab-content">
+		        <div role="tabpanel" class="tab-pane active" id="comment">
+		        <volist name="comments" id="vo">
+		        	<div class="row" id="{$vo.cid}">
+		        		<div class="col-md-1 col-xs-2">
+		        			<img src="{$vo.upic}" alt="头像" class="img-responsive img-rounded">
+		        		</div>
+			        	<div class="col-md-11 col-xs-10">
+			        		<div class="row">
+			        			<div class="col-md-4  col-xs-6">
+			        				<h4><span>{$vo.uname}</span><empty name="vo.replied_id"> <small> 说：</small></empty><notempty name="vo.replied_id"><small> 回复</small> <span>{$vo.replied_name}</span></notempty></h4>
+			        			</div>
+			        			<div class="col-md-offset-6 col-md-2  col-xs-6">
+			        				{$vo.time}
+			        			</div>
+			        		</div>
+			        		<div class="row">
+			        			<div class="col-md-12">{$vo.content}</div>
+			        		</div>
+			        		<div class="col-md-offset-11"><empty name="vo.cantReply"><button type="button" class="btn btn-default btn-sm modal-btn" data-toggle="modal" data-target="#replyModal" onclick="initReplyModal('{$vo.cid}')">回复</button></empty></div>
+			        	</div>
+			        </div>
+			        <hr>
+			    </volist>        	
+		        </div>
+		        <div role="tabpanel" class="tab-pane" id="auction">
+		        <volist name="auction" id="vo">
+		        	<div class="row">
+		        		<div class="col-md-1 col-xs-2">
+		        			<img src="{$vo.upic}" alt="头像" class="img-responsive img-rounded">
+		        		</div>
+			        	<div class="col-md-11 col-xs-10">
+			        		<div class="row">
+			        			<div class="col-md-4 col-xs-6">
+			        				<h4><span>{$vo.uname}</span> <small>出价：</small><strong>￥{$vo.auction_price}</strong></h4>
+			        			</div>
+			        			<div class="col-md-offset-6 col-md-2 col-xs-6">
+			        				{$vo.time}
+			        			</div>
+			        		</div>
+			        		<div class="row">
+			        			<div class="col-md-12">
+			        				{$vo.comment}
+			        			</div>
+			        		</div>
+			        	</div>
+			        </div>
+			        <hr>
+			     </volist>
+		        </div>
+		    </div>
+		</div>
+	</div>
+</volist>
+<!-- Modal -->
+<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">发表评论</h4>
+      </div>
+      <div class="modal-body">
+        <form action="{:U('User/makeComment')}" method="POST" class="form-horizontal" role="form">
+        		<input type="hidden" name="goods_id" value="{$gid}">
+        		<div class="form-group">
+		  			<div class="col-md-offset-1 col-md-10">
+	  					<textarea class="form-control" name="content" id="content"  cols="30" rows="5"></textarea>
+		  			</div>
+  				</div>
+        		<div class="form-group">
+        			<div class="col-sm-2 col-sm-offset-9">
+        				<button type="submit" class="btn btn-primary">提交</button>
+        			</div>
+        		</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="auctionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">竞价</h4>
+      </div>
+      <div class="modal-body">
+          <form action="{:U('User/makeAuction')}" method="POST" class="form-horizontal" role="form">
+        		<input type="hidden" name="goods_id" value="{$gid}">
+        		<input type="hidden" name="price1" value="{$base_price}">
+        		<input type="hidden" name="price2" value="{$top_auction}">
+        		<div class="form-group">
+        			<label class="col-md-2 control-label" for="price1">底价</label>
+		  			<div class="col-md-8">
+	  					<input class="form-control"   id="price1" value="{$base_price}" disabled required>
+		  			</div>
+  				</div>
+  				<div class="form-group">
+        			<label class="col-md-2 control-label" for="price2">最高竞价</label>
+		  			<div class="col-md-8">
+	  					<input class="form-control"  id="price2" value="{$top_auction}" disabled required>
+		  			</div>
+  				</div>
+        		<div class="form-group">
+        			<label class="col-md-2 control-label" for="auction_price">竞价</label>
+		  			<div class="col-md-8">
+	  					<input class="form-control" name="auction_price" id="auction_price" placeholder="必须高于当前的最高竞价或底价" required>
+		  			</div>
+  				</div>
+  				<div class="form-group">
+  					<label class="col-md-2 control-label" for="comment">感言</label>
+		  			<div class="col-md-8">
+	  					<textarea class="form-control" name="comment" id="comment"  cols="30" rows="5" required></textarea>
+		  			</div>
+  				</div>
+        		<div class="form-group">
+        			<div class="col-sm-2 col-sm-offset-9">
+        				<button  class="btn btn-primary">提交</button>
+        			</div>
+        		</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="replyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">回复评论</h4>
+      </div>
+      <div class="modal-body">
+        <form action="{:U('User/makeComment')}" method="POST" class="form-horizontal" role="form">
+        		<input type="hidden" name="replied_id">
+        		<input type="hidden" name="goods_id" value="{$gid}">
+        		<div class="form-group">
+		  			<div class="col-md-offset-1 col-md-10">
+	  					<textarea class="form-control" name="content" id="content"  cols="30" rows="5"></textarea>
+		  			</div>
+  				</div>
+        		<div class="form-group">
+        			<div class="col-sm-2 col-sm-offset-9">
+        				<button type="submit" class="btn btn-primary">提交</button>
+        			</div>
+        		</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</block>
+<block name="script">
+	<script type="text/javascript">
+		$("button.modal-btn").click(function(event) {
+			if(islogin==''){
+				window.location.href = "{:U('Login/index')}";
+			}
+		});
+		function initReplyModal(cid){
+			$("input[name='replied_id']").val(cid);
+		}
+		$("#auction_price").change(function(event) {
+			/* Act on the event */
+			if(isNaN($(this).val())){
+				alert("输入的不是数字");
+				$(this).focus();
+				return false;
+			}
+			var top = parseInt($("#base_price").text());
+			if($("#top_auction").text()==0 && $(this).val()<top){
+				alert("竞价的金额不能小于底价");
+				$(this).focus();
+				return false;
+			}
+			var top = parseInt($("#top_auction").text());
+			if($("#top_auction").text()!=0 && $(this).val()<=top){
+				alert("竞价的金额必须大于目前的最高竞价");
+				$(this).focus();
+				return false;
+			}
+		});
+		function check(){
+			var top1 = parseInt($("#top_auction").text());
+			var top2 = parseInt($("#base_price").text());
+			if($("input[name='auction_price]").val()<top1 || $("input[name='auction_price]").val()<top1){
+				alert("竞价的金额不能小于目前的最高竞价或低价");
+				return false;
+			}
+		}
+	</script>
+</block>

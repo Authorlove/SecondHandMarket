@@ -1,0 +1,98 @@
+<extend name="Public/base"/>
+<block name="header">
+	<ul class="nav navbar-nav">
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">商品 <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="{:U('Index/index')}">全部类别</a></li>
+				<li><a href="{:U('Index/index?label=电器数码')}">电器数码</a></li>
+				<li><a href="{:U('Index/index?label=运动健身')}">运动健身</a></li>
+				<li><a href="{:U('Index/index?label=图书教材')}">图书教材</a></li>
+				<li><a href="{:U('Index/index?label=生活娱乐')}">生活娱乐</a></li>
+				<li><a href="{:U('Index/index?label=衣物伞帽')}">衣物伞帽</a></li>
+				<li><a href="{:U('Index/index?label=其他类别')}">其他类别</a></li>
+			</ul>
+		</li>
+		<li><a href="{:U('User/publish')}">发布 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">我的发布 <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="{:U('User/published')}">全部状态</a></li>
+				<li><a href="{:U('User/published?status=0')}">竞价中</a></li>
+				<li><a href="{:U('User/published?status=1')}">已成交</a></li>
+				<li><a href="{:U('User/published?status=-1')}">已下架</a></li>
+			</ul>
+		</li>
+		<li class="active"><a href="{:U('User/auctioned')}">我的竞价</a></li>
+	</ul>
+	<form action="{:U('Index/search')}" class="navbar-form navbar-left" role="search">
+		<div class="form-group">
+			<input type="search" name="key" class="form-control" placeholder="搜索商品" required required>
+		</div>
+		<button type="submit" class="btn btn-default">搜索</button>
+	</form>
+	<ul class="nav navbar-nav navbar-right">
+		<li class="notlogin"><a href="{:U('Login/index')}">登录</a></li>
+		<li class="notlogin"><a href="{:U('Login/signup')}">注册</a></li>
+		<li class="dropdown login">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" >{:session('uname')} <b class="caret"></b></a>
+			<ul class="dropdown-menu">							
+				<li><a href="{:U('User/setting')}">账号设置</a></li>
+				<li><a href="{:U('User/logout')}">退出</a></li>
+			</ul>
+		</li>
+	</ul>
+</block>
+<block name="content">
+<volist name="data" id="vo">
+	<div class="row">
+		<div class="col-md-3">
+			<img src="{$vo.gpic}" alt="" class="img-responsive img-rounded">
+		</div>
+		<div class="col-md-9">
+			<div class="row">
+			<div class="col-md-12">
+				<h3><span>{$vo.gname}</span>  <small>{$vo.description}</small></h3>
+			</div>
+			</div>
+			<hr>
+			<div class="row">
+				<div class="col-md-4">
+					<span>标签: <span class="label label-default">{$vo.label}</span></span> 
+				</div>	
+				<div class="col-md-4">
+					<span>发布者: <span id="{$vo.user_id}">{$vo.uname}<notempty name="vo.attact">邮箱:{$vo.attact})</notempty></span></span> 
+				</div>
+				<div class="col-md-4">
+					<span>发布时间: <span>{$vo.update_time}</span></span> 
+				</div>		
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-4 col-xs-4">底价：<span>￥<b id="base_price">{$vo.base_price}</b></span></div>
+				<div class="col-md-4 col-xs-4">最高竞价：<span>￥<b id="top_auction">{$vo.top_auction}</b></span></div>
+				<div class="col-md-4 col-xs-4">
+					我的最高竞价：<span>￥<b id="top_auction">{$vo.auction_price}<notempty name="vo.attact"><em>竞价成功</em></notempty></b></span>
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-3 col-xs-3"><span>评论数：</span> <span>{$vo.comment_num}</span></div>
+				<div class="col-md-3 col-xs-3"><span>竞价数：</span><span>{$vo.auction_num}</span></div>
+				<div class="col-md-3">
+					<span>状态：</span><strong><switch name="vo.status"><case value="0">竞价中</case><case value="1">已成交</case><case value="-1">已下架</case></switch></strong>
+				</div>
+				<div class="col-md-3 col-xs-3">
+				<a href="<?php echo U('Index/detail').'?gid='.$vo['gid'];?>" class="btn btn-primary btn-sm">查看详情</a>
+				</div>
+			</div>	
+		</div>
+	</div>
+	<hr>
+</volist>
+<div class="row">
+	<div class="col-md-7 col-md-offset-5 col-xs-12" id="page">
+			{$page}
+	</div>
+</div>
+</block>

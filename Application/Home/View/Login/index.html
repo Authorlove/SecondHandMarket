@@ -1,0 +1,76 @@
+<extend name="Public/base"/>
+<block name="header">
+	<ul class="nav navbar-nav">
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">商品 <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="{:U('Index/index')}">全部类别</a></li>
+				<li><a href="{:U('Index/index?label=电器数码')}">电器数码</a></li>
+				<li><a href="{:U('Index/index?label=运动健身')}">运动健身</a></li>
+				<li><a href="{:U('Index/index?label=图书教材')}">图书教材</a></li>
+				<li><a href="{:U('Index/index?label=生活娱乐')}">生活娱乐</a></li>
+				<li><a href="{:U('Index/index?label=衣物伞帽')}">衣物伞帽</a></li>
+				<li><a href="{:U('Index/index?label=其他类别')}">其他类别</a></li>
+			</ul>
+		</li>
+		<li><a href="{:U('User/publish')}">发布 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">我的发布 <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="{:U('User/published')}">全部状态</a></li>
+				<li><a href="{:U('User/published?status=0')}">竞价中</a></li>
+				<li><a href="{:U('User/published?status=1')}">已成交</a></li>
+				<li><a href="{:U('User/published?status=-1')}">已下架</a></li>
+			</ul>
+		</li>
+		<li><a href="{:U('User/auctioned')}">我的竞价</a></li>
+	</ul>
+	<form action="{:U('Index/search')}" class="navbar-form navbar-left" role="search">
+		<div class="form-group">
+			<input type="search" name="key" class="form-control" placeholder="搜索商品" required required>
+		</div>
+		<button type="submit" class="btn btn-default">搜索</button>
+	</form>
+	<ul class="nav navbar-nav navbar-right">
+		<li class="notlogin active"><a href="{:U('Login/index')}">登录</a></li>
+		<li class="notlogin"><a href="{:U('Login/signup')}">注册</a></li>
+		<li class="dropdown login">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" >{:session('uname')} <b class="caret"></b></a>
+			<ul class="dropdown-menu">							
+				<li><a href="{:U('User/setting')}">账号设置</a></li>
+				<li><a href="{:U('User/logout')}">退出</a></li>
+			</ul>
+		</li>
+	</ul>
+</block>
+<block name="content">
+	<div class="row">
+		<div class="panel panel-default">
+			  <div class="panel-heading">
+					<h3 class="panel-title">登陆</h3>
+			  </div>
+			  <div class="panel-body">
+					<form action="{:U('Login/login')}" method="POST" class="form-horizontal" role="form">
+					  		<div class="form-group">
+					  			<label for="account" class="col-md-2 control-label">账号</label>
+					  			<div class="col-md-8">
+				  					<input type="email" name="uaccount" id="account" class="form-control" required="required" placeholder="请输入邮箱">
+					  			</div>
+			  				</div>
+			  				<div class="form-group">
+					  			<label for="password" class="col-md-2 control-label">密码</label>
+					  			<div class="col-md-8">
+				  					<input type="password" name="upwd" id="password" class="form-control" required="required" placeholder="请输入密码">
+					  			</div>
+			  				</div>
+							<div class="form-group">
+								<div class="col-sm-10 col-sm-offset-2">
+									<button type="submit" class="btn btn-primary">登陆</button>
+									<a class="col-md-offset-6 btn btn-default" href="{:U('Login/signup')}">没有账号？去注册</a>
+								</div>
+							</div>
+					</form>
+			  </div>
+		</div>
+	</div>
+</block>

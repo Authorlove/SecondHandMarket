@@ -1,0 +1,123 @@
+<extend name="Public/base"/>
+<block name="header">
+	<ul class="nav navbar-nav">
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">商品 <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="{:U('Index/index')}">全部类别</a></li>
+				<li><a href="{:U('Index/index?label=电器数码')}">电器数码</a></li>
+				<li><a href="{:U('Index/index?label=运动健身')}">运动健身</a></li>
+				<li><a href="{:U('Index/index?label=图书教材')}">图书教材</a></li>
+				<li><a href="{:U('Index/index?label=生活娱乐')}">生活娱乐</a></li>
+				<li><a href="{:U('Index/index?label=衣物伞帽')}">衣物伞帽</a></li>
+				<li><a href="{:U('Index/index?label=其他类别')}">其他类别</a></li>
+			</ul>
+		</li>
+		<li class="active"><a href="{:U('User/publish')}">发布 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+		<li class="dropdown">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown">我的发布 <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="{:U('User/published')}">全部状态</a></li>
+				<li><a href="{:U('User/published?status=0')}">竞价中</a></li>
+				<li><a href="{:U('User/published?status=1')}">已成交</a></li>
+				<li><a href="{:U('User/published?status=-1')}">已下架</a></li>
+			</ul>
+		</li>
+		<li><a href="{:U('User/auctioned')}">我的竞价</a></li>
+	</ul>
+	<form action="{:U('Index/search')}" class="navbar-form navbar-left" role="search">
+		<div class="form-group">
+			<input type="search" name="key" class="form-control" placeholder="搜索商品" required required>
+		</div>
+		<button type="submit" class="btn btn-default">搜索</button>
+	</form>
+	<ul class="nav navbar-nav navbar-right">
+		<li class="notlogin"><a href="{:U('Login/index')}">登录</a></li>
+		<li class="notlogin"><a href="{:U('Login/signup')}">注册</a></li>
+		<li class="dropdown login">
+			<a href="#" class="dropdown-toggle" data-toggle="dropdown" >{:session('uname')} <b class="caret"></b></a>
+			<ul class="dropdown-menu">							
+				<li><a href="{:U('User/setting')}">账号设置</a></li>
+				<li><a href="{:U('User/logout')}">退出</a></li>
+			</ul>
+		</li>
+	</ul>
+</block>
+<block name="content">
+	<div class="row">
+		<form action="{:U('User/submitPublish')}" enctype="multipart/form-data" method="POST" class="form-horizontal" role="form">
+				<div class="form-group">
+					<legend>发布二手商品</legend>
+				</div>		
+  				<div class="form-group">
+		  			<label for="gname" class="col-md-2 control-label">名称</label>
+		  			<div class="col-md-8">
+	  					<input type="text" name="gname" id="gname" class="form-control" required="required" placeholder="">
+		  			</div>
+  				</div>
+  				<div class="form-group">
+		  			<label for="description" class="col-md-2 control-label">描述</label>
+		  			<div class="col-md-8">
+	  					<textarea class="form-control" name="description" id="description"  cols="30" rows="5"></textarea>
+		  			</div>
+  				</div>
+  				<div class="form-group">
+		  			<label for="base_price" class="col-md-2 control-label">底价(元)</label>
+		  			<div class="col-md-8">
+	  					<input type="text" name="base_price" id="base_price" class="form-control" required="required" placeholder="">
+		  			</div>
+  				</div>
+  				<div class="form-group">
+		  			<label for="label" class="col-md-2 control-label">标签</label>
+		  			<div class="col-md-8">
+	  					<select type="text" name="label" id="label" class="form-control" required="required">
+	  						<option value="电器数码">电器数码</option>
+	  						<option value="运动健身">运动健身</option>
+	  						<option value="图书教材">图书教材</option>
+	  						<option value="生活娱乐">生活娱乐</option>
+	  						<option value="衣物伞帽">衣物伞帽</option>
+	  						<option value="其他类别">其他类别</option>
+	  					</select>
+		  			</div>
+  				</div>
+  				<div class="form-group">
+		  			<label for="gpic" class="col-md-2 control-label">图片</label>
+		  			<div class="col-md-8">
+	  					<input type="file" name="gpic" accept="image/*" id="gpic" class="form-control" required="required">
+		  			</div>
+		  			<div class="col-md-1">
+		  				<img id="uploadPreview" style="display:none" class="img-responsive" /> 
+		  			</div>
+		  			</div>
+  				</div>
+  				<hr>
+				<div class="form-group">
+					<div class="col-sm-10 col-sm-offset-2">
+						<button type="submit" class="btn btn-primary">发布</button>
+					</div>
+				</div>
+		</form>
+	</div>
+</block>
+<block name="script">
+<script>
+	$("#base_price").change(function(event) {
+		/* Act on the event */
+		if(isNaN($(this).val())){
+			alert("请输入数字");
+			$(this).focus();
+		}
+	});
+	$("#gpic").change(function() {
+		if(!window.FileReader) return;
+		var oFReader = new FileReader();
+		if (document.getElementById("gpic").files.length === 0) { return; }
+		var oFile = document.getElementById("gpic").files[0];
+		oFReader.readAsDataURL(oFile);
+		oFReader.onload = function (oFREvent) {
+		  $("#uploadPreview").css("display","block");
+		  document.getElementById("uploadPreview").src = oFREvent.target.result;
+		};
+	});
+</script>
+</block>
